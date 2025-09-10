@@ -48,7 +48,35 @@ if __name__ == "__main__":
 
     driver.get(url)
 
-    
+    try:
+        WebDriverWait(driver, 20).until(
+            EC.presence_of_element_located((By.TAG_NAME, "body"))
+        )
+        print("✅ 頁面載入完成，可以開始抓取！")
+
+        menu_sign_up = driver.find_element(By.XPATH, '//*[@id="Menu2Sub"]/a[1]')
+        sign_up_url = menu_sign_up.get_attribute("href")
+
+        driver.get(sign_up_url)
+
+        try: 
+            WebDriverWait(driver, 20).until(
+                EC.presence_of_element_located((By.TAG_NAME, "body"))
+            )
+            print("✅ 頁面載入完成，可以開始抓取！")
+
+            sign_up_btn = driver.find_element(By.XPATH, '//*[@id="ctl00_ContentBody_TABLE_Notice"]/tbody/tr[3]/td/input')
+            sign_up_btn.click()
+        except Exception as e:
+            print("找不到 [我要報名] 按鈕")
+
+            page_content = driver.find_element(By.CSS_SELECTOR, '#DIV_Body > div > div.DIV_PageContent')
+
+            if '報名尚未開始' in page_content.text:
+                print('報名尚未開始')
+
+    except Exception as e:
+        print("❌ 頁面載入失敗:", e)
 
     driver.close()
 
